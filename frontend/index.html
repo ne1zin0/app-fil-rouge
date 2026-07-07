@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevOps Notes</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; color: #222; }
+    h1 { color: #0B2E4F; }
+    form { display: flex; gap: .5rem; margin-bottom: 1rem; }
+    input { flex: 1; padding: .5rem; }
+    button { padding: .5rem 1rem; background: #1F6FB2; color: #fff; border: 0; cursor: pointer; }
+    li { padding: .4rem 0; border-bottom: 1px solid #eee; }
+    small { color: #888; }
+  </style>
+</head>
+<body>
+  <h1>📝 DevOps Notes</h1>
+  <form id="f">
+    <input id="c" placeholder="Votre note..." required />
+    <button>Ajouter</button>
+  </form>
+  <ul id="list"></ul>
+  <script>
+    const API = (window.API_BASE || '') + '/api/notes';
+    async function load() {
+      const r = await fetch(API);
+      const notes = await r.json();
+      document.getElementById('list').innerHTML = notes
+        .map(n => `<li>${n.content} <small>${new Date(n.created_at).toLocaleString()}</small></li>`)
+        .join('');
+    }
+    document.getElementById('f').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const content = document.getElementById('c').value;
+      await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content }) });
+      document.getElementById('c').value = '';
+      load();
+    });
+    load();
+  </script>
+</body>
+</html>
