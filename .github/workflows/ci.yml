@@ -21,11 +21,19 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ./api
+
   test:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: api/package-lock.json
       - uses: actions/setup-node@v5
         with:
           node-version: '20'
