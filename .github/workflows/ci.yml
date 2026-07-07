@@ -21,7 +21,14 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ./api
-
+  test-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "ENV=$APP_ENV ; token len =${Docker_TOKEN}"
+        env:
+         APP_ENV: ${{ vars.APP_ENV }}
+         Docker_TOKEN: ${{ secrets.Docker_TOKEN }}
   test:
     needs: build
     runs-on: ubuntu-latest
