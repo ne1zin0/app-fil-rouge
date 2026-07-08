@@ -1,0 +1,13 @@
+stages: [build, test, deploy]
+default: { image: node:20-alpine }
+build:
+  stage: build
+  script: [ "cd api && npm install" ]
+test:
+  stage: test
+  script: [ "cd api && npm install && npm test" ]
+deploy-staging:
+  stage: deploy
+  script: [ "echo 'Déploiement staging...'" ]
+  environment: { name: staging }
+  rules: [ { if: '$CI_COMMIT_BRANCH == "main"' } ]
